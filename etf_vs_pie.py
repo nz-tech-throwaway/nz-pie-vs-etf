@@ -14,7 +14,7 @@ starting_investment = 100000
 income_tax_rate = 0.39
 pir = 0.28
 pie_fund_fee = 0.0025
-etf_fund_fee = 0.0003
+etf_fund_fee = 0.003
 
 plot_outcome = False # Change to True to generate a plot of the results
 
@@ -36,7 +36,7 @@ for data in bootstrapped_samples:
     # If we don't do this we get a sample length the same length as the total index dataset, e.g. 98 years of S&P 500.
     # We want to generate block bootstrap samples that are only total_years in length, but sampling blocks from 
     # the entire 98 years of index data.
-    random_starting_index = np.random.randint(0, data.size/2 - total_years)
+    random_starting_index = np.random.randint(0, data.size/4 - total_years)
     X_bootstrapped.append(data[random_starting_index:random_starting_index+total_years])
 
 X_bootstrapped = np.array(X_bootstrapped)
@@ -67,8 +67,8 @@ for sample in X_bootstrapped:
 
 print("Mean FDR or CV outcome (ETF)    : ", '${:,.2f}'.format(mean_etf_outcome / n_bootstraps))
 print("Mean FDR only outcome (PIE fund): ", '${:,.2f}'.format(mean_pie_outcome / n_bootstraps))
-print("CV method chosen {}% of the time".format(cv_method_chosen_count/n_bootstraps))
-print("The PIE fund beats directly holding the ETF in {} samples out of {} ({}%)".format(pie_beats_etf_count, n_bootstraps, pie_beats_etf_count/n_bootstraps))
+print("CV method chosen {:.1%} of the time".format(cv_method_chosen_count / (n_bootstraps * total_years)))
+print("The PIE fund beats directly holding the ETF in {} samples out of {} ({:.1%})".format(pie_beats_etf_count, n_bootstraps, pie_beats_etf_count/n_bootstraps))
 
 
 # Plot the samples and original time series
